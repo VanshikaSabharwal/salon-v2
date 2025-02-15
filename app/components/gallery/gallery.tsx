@@ -80,9 +80,9 @@ const GalleryComponent = () => {
       } else {
         throw new Error(data.message);
       }
-    } catch (error) {
-      console.error("Error checking admin status:", error);
-      toast.error("Failed to check admin status.");
+    } catch {
+      // console.error("Error checking admin status:", error);
+      // toast.error("Failed to check admin status.");
       return false;
     }
   };
