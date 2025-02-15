@@ -22,7 +22,7 @@ const GalleryComponent = () => {
 
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [loadingPercentage, setLoadingPercentage] = useState(0);
+  // const [loadingPercentage, setLoadingPercentage] = useState(0);
 
   const supabase = createClientComponentClient();
 
@@ -184,24 +184,7 @@ const GalleryComponent = () => {
           Our Salon Gallery
         </h2>
 
-        {loadingPercentage ? (
-          <div className="flex flex-col justify-center items-center min-h-[50vh]">
-            <div className="relative w-32 sm:w-40 h-32 sm:h-40">
-              <svg className="animate-spin h-full w-full" viewBox="0 0 50 50">
-                <circle
-                  className="fill-none stroke-[#f32170]"
-                  cx="25"
-                  cy="25"
-                  r="20"
-                  strokeWidth="5"
-                ></circle>
-              </svg>
-            </div>
-            <p className="text-lg mt-4 text-[#6f6f6f]">
-              Loading {loadingPercentage}%...
-            </p>
-          </div>
-        ) : (
+        
           <>
             {isAdmin && (
               <div className="mb-4 flex justify-end">
@@ -292,7 +275,7 @@ const GalleryComponent = () => {
               </div>
             )}
           </>
-        )}
+      
       </div>
       <ToastContainer position="top-right" autoClose={3000} />
     </div>
