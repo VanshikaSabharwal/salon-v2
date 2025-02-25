@@ -11,8 +11,7 @@ import {
 } from "react-icons/fa";
 
 const Socials = () => {
-  const [socialsData] = useState(socials); // Directly initialize socials data
-  // Map names to corresponding React Icons
+  const [socialsData] = useState(socials); 
   const icons: Record<string, React.ReactNode> = {
     WhatsApp: <FaWhatsapp />,
     Phone: <FaPhone />,
