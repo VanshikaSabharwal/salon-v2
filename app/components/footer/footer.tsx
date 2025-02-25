@@ -27,7 +27,7 @@ const Footer = () => {
             <p>
               <a
                 href="mailto:contact@kstyle.com"
-                className="text-blue-400 hover:text-blue-600"
+                className="text-[#d4af37] hover:text-[#e6c757] "
               >
                 Email: contact@kstyle.com
               </a>
@@ -35,7 +35,7 @@ const Footer = () => {
             <p>
               <a
                 href="tel:+918989896108"
-                className="text-blue-400 hover:text-blue-600"
+                className="text-[#d4af37] hover:text-[#e6c757] "
               >
                 Phone: +918989896108
               </a>
@@ -49,7 +49,7 @@ const Footer = () => {
               href={location}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-600"
+              className="text-[#d4af37] hover:text-[#e6c757] "
             >
               Click here to view on Google Maps
             </a>
