@@ -14,6 +14,7 @@ const ReviewSection = () => {
   const [name, setName] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isMobile, setIsMobile] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -33,11 +34,22 @@ const ReviewSection = () => {
     fetchReviews();
   }, []);
 
+  // Detect screen width for responsive design
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768); // Mobile if less than 768px (Tailwind 'md' breakpoint)
+    };
+    
+    handleResize(); // Set on initial load
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true); // Disable button
-  
+    setIsSubmitting(true);
+
     if (!name.trim()) {
       setError("Name is required.");
       setIsSubmitting(false);
@@ -53,12 +65,12 @@ const ReviewSection = () => {
       setIsSubmitting(false);
       return;
     }
-  
+
     const { data, error } = await supabase
       .from("reviews")
       .insert([{ name, text: reviewText, rating }])
       .select("*");
-  
+
     if (error) {
       console.error("Error adding review:", error);
       setError("Something went wrong. Try again.");
@@ -69,41 +81,54 @@ const ReviewSection = () => {
       setName("");
       setError("");
     }
-    
-    setIsSubmitting(false); // Enable button after request completes
+
+    setIsSubmitting(false);
   };
-  
 
   const handleStarClick = (index: number) => {
     setRating(index + 1);
   };
 
   return (
-    <div className="bg-[#f8f1e7] max-w-3xl mx-auto p-6 rounded-lg "> 
+    <div className="bg-[#f8f1e7] max-w-3xl mx-auto p-6 rounded-lg">
       <h2 className="text-2xl font-bold text-center text-gray-800">Our Reviews</h2>
-      {/* Reviews Carousel */}
+
+      {/* Conditional rendering: Carousel on mobile, Grid on Desktop */}
       <div className="mt-4">
         {reviews.length > 0 ? (
-          <Carousel
-            showArrows={true}
-            autoPlay={true}
-            infiniteLoop={true}
-            showThumbs={false}
-            showStatus={false}
-            className="rounded-lg p-4 shadow"
-          >
-            {reviews.map((review) => (
-              <div key={review.id} className="p-6 text-center rounded-lg">
+          isMobile ? (
+            <Carousel
+              showArrows={true}
+              autoPlay={true}
+              infiniteLoop={true}
+              showThumbs={false}
+              showStatus={false}
+              className="rounded-lg p-4 shadow"
+            >
+              {reviews.map((review) => (
+                <div key={review.id} className="p-6 text-center rounded-lg">
                   <p className="text-yellow-500 text-lg mt-1">{"⭐".repeat(review.rating)}</p>
-                <p className="font-semibold text-lg text-gray-900">{review.name}</p>
-                <p className="text-gray-700 text-sm mt-2">{review.text}</p>
-              </div>
-            ))}
-          </Carousel>
+                  <p className="font-semibold text-lg text-gray-900">{review.name}</p>
+                  <p className="text-gray-700 text-sm mt-2">{review.text}</p>
+                </div>
+              ))}
+            </Carousel>
+          ) : (
+            <div className="flex space-x-4 justify-center">
+              {reviews.map((review) => (
+                <div key={review.id} className="p-4 text-center bg-white rounded-lg shadow-md w-1/3">
+                  <p className="text-yellow-500 text-lg mt-1">{"⭐".repeat(review.rating)}</p>
+                  <p className="font-semibold text-lg text-gray-900">{review.name}</p>
+                  <p className="text-gray-700 text-sm mt-2">{review.text}</p>
+                </div>
+              ))}
+            </div>
+          )
         ) : (
           <p className="text-center text-gray-500 mt-4">No reviews yet.</p>
         )}
       </div>
+
       {/* Review Form */}
       <div className="mt-6 p-6 bg-white rounded-lg shadow">
         <h2 className="text-lg font-semibold text-gray-800">Leave a Review</h2>
@@ -134,15 +159,14 @@ const ReviewSection = () => {
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
-  type="submit"
-  disabled={isSubmitting}
-  className={`w-full bg-black text-white px-4 py-2 rounded-lg transition duration-200 ${
-    isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-grey-600"
-  }`}
->
-  {isSubmitting ? "Submitting..." : "Submit Review"}
-</button>
-
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full bg-black text-white px-4 py-2 rounded-lg transition duration-200 ${
+              isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-600"
+            }`}
+          >
+            {isSubmitting ? "Submitting..." : "Submit Review"}
+          </button>
         </form>
       </div>
     </div>

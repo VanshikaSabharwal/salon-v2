@@ -29,7 +29,7 @@ const Footer = () => {
                 href="mailto:contact@kstyle.com"
                 className="text-[#d4af37] hover:text-[#e6c757] "
               >
-                Email: contact@kstyle.com
+                Email: kstyleprofessional@gmail.com
               </a>
             </p>
             <p>
@@ -44,7 +44,7 @@ const Footer = () => {
 
           {/* Map Section */}
           <div className="map-section sm:w-1/3">
-            <h4 className="text-lg font-semibold">Find Us</h4>
+            <h4 className="text-lg font-semibold">Location</h4>
             <a
               href={location}
               target="_blank"
