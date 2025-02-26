@@ -136,8 +136,8 @@ const ReviewSection = () => {
           <button
   type="submit"
   disabled={isSubmitting}
-  className={`w-full bg-purple-500 text-white px-4 py-2 rounded-lg transition duration-200 ${
-    isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-600"
+  className={`w-full bg-black text-white px-4 py-2 rounded-lg transition duration-200 ${
+    isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-grey-600"
   }`}
 >
   {isSubmitting ? "Submitting..." : "Submit Review"}
