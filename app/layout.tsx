@@ -20,7 +20,7 @@ const merienda = Merienda({
 
 export const metadata: Metadata = {
   title: "K Style Professional",
-  description: "Made with Next.js",
+  description: "",
 };
 
 export default function RootLayout({
