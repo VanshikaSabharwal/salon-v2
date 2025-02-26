@@ -13,6 +13,7 @@ const ReviewSection = () => {
   const [rating, setRating] = useState<number>(0);
   const [name, setName] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -32,27 +33,32 @@ const ReviewSection = () => {
     fetchReviews();
   }, []);
 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    setIsSubmitting(true); // Disable button
+  
     if (!name.trim()) {
       setError("Name is required.");
+      setIsSubmitting(false);
       return;
     }
     if (reviewText.length > 50) {
       setError("Review must be 50 characters or less.");
+      setIsSubmitting(false);
       return;
     }
     if (rating < 1 || rating > 5) {
       setError("Please select a rating between 1 and 5.");
+      setIsSubmitting(false);
       return;
     }
-
+  
     const { data, error } = await supabase
       .from("reviews")
       .insert([{ name, text: reviewText, rating }])
       .select("*");
-
+  
     if (error) {
       console.error("Error adding review:", error);
       setError("Something went wrong. Try again.");
@@ -63,7 +69,10 @@ const ReviewSection = () => {
       setName("");
       setError("");
     }
+    
+    setIsSubmitting(false); // Enable button after request completes
   };
+  
 
   const handleStarClick = (index: number) => {
     setRating(index + 1);
@@ -124,9 +133,16 @@ const ReviewSection = () => {
             ))}
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
-          <button type="submit" className="w-full bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200">
-            Submit Review
-          </button>
+          <button
+  type="submit"
+  disabled={isSubmitting}
+  className={`w-full bg-purple-500 text-white px-4 py-2 rounded-lg transition duration-200 ${
+    isSubmitting ? "opacity-50 cursor-not-allowed" : "hover:bg-purple-600"
+  }`}
+>
+  {isSubmitting ? "Submitting..." : "Submit Review"}
+</button>
+
         </form>
       </div>
     </div>
