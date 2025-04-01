@@ -31,7 +31,7 @@ async function sendResetEmail(email: string, resetLink: string) {
 
   try {
     await transporter.sendMail(mailOptions);
-  } catch (error) {
+  } catch {
     throw new Error("Failed to send reset email");
   }
 }
@@ -96,7 +96,7 @@ export async function PUT(req: NextRequest) {
 
   try {
     // Store the reset token and expiration date in the users table
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('users')
       .update({ reset_token: resetToken, reset_token_expiration: expirationDate })
       .eq('email', email);
@@ -112,7 +112,7 @@ export async function PUT(req: NextRequest) {
     const resetLink = `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password?email=${encodeURIComponent(email)}&token=${resetToken}`;
     await sendResetEmail(email, resetLink);
 
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { message: "Error during password reset request." },
       { status: 400 }

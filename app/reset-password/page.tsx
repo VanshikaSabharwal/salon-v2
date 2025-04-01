@@ -1,16 +1,10 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useEffect } from "react"
+import { useState} from "react"
 import { useRouter } from "next/navigation"
-import { createClient } from "@supabase/supabase-js"
 
-// Create a supabase client for client-side operations
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "",
-)
+
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("")
