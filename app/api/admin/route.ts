@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const cookie = req.cookies.get("admin");
+  // Retrieve the 'isAdmin' cookie from the request
+  const cookie = req.cookies.get('isAdmin');
 
-  if (cookie?.value === "true") {
+  // Check if the cookie is 'true'
+  if (cookie?.value === 'true') {
     return NextResponse.json({ isAdmin: true });
   }
 

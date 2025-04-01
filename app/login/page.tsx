@@ -2,35 +2,84 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createClient } from "@supabase/supabase-js";
+
+// Create a supabase client for client-side operations
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+);
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
+  const [isResetMode, setIsResetMode] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setMessage("");
 
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (res.ok) {
-      router.push("/"); // Redirect to admin page after login
-    } else {
       const data = await res.json();
-      setError(data.message || "Invalid credentials");
+      
+      if (res.ok) {
+        router.push("/");
+        router.refresh(); // Refresh to update auth state
+      } else {
+        setError(data.message || "Invalid credentials");
+      }
+    } catch (err) {
+      setError("An error occurred during login");
+      console.error(err);
+    }
+  };
+
+  const handlePasswordReset = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!email) {
+      setError("Please enter your email");
+      return;
+    }
+    
+    setError("");
+    setMessage("Sending password reset email...");
+
+    try {
+      const res = await fetch("/api/login", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      
+      if (res.ok) {
+        setMessage(data.message || "Password reset email sent. Check your inbox.");
+      } else {
+        setError(data.message || "Failed to send reset email");
+      }
+    } catch (err) {
+      setError("An error occurred");
+      console.error(err);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleLogin} className="p-6 bg-black shadow rounded">
-        <h1 className="text-xl font-bold mb-4 text-white">Admin Login</h1>
+      <form onSubmit={isResetMode ? handlePasswordReset : handleLogin} className="p-6 bg-black shadow rounded w-80">
+        <h1 className="text-xl font-bold mb-4 text-white">{isResetMode ? "Reset Password" : "Admin Login"}</h1>
         {error && <p className="text-red-500 mb-2">{error}</p>}
+        {message && <p className="text-green-500 mb-2">{message}</p>}
         <div className="mb-4">
           <label className="block text-sm text-white font-medium">Email</label>
           <input
@@ -42,22 +91,31 @@ export default function LoginPage() {
             required
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-sm text-white font-medium">Password</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border text-black rounded"
-            placeholder="Password"
-            required
-          />
-        </div>
+        {!isResetMode && (
+          <div className="mb-4">
+            <label className="block text-sm text-white font-medium">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border text-black rounded"
+              placeholder="Password"
+              required
+            />
+          </div>
+        )}
         <button
           type="submit"
           className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600"
         >
-          Login
+          {isResetMode ? "Send Reset Link" : "Login"}
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsResetMode(!isResetMode)}
+          className="w-full bg-gray-500 text-white py-2 rounded mt-2 hover:bg-gray-600"
+        >
+          {isResetMode ? "Back to Login" : "Forgot Password"}
         </button>
       </form>
     </div>
