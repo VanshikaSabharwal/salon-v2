@@ -24,7 +24,7 @@ async function sendResetEmail(email: string, resetLink: string) {
   const mailOptions = {
     from: process.env.EMAIL_USER,  // Sender email
     to: email,                    // Receiver email
-    subject: "Password Reset Request",
+    subject: "Password Reset Request for K Style Professional Salon Website",
     text: `To reset your password, please click the following link: ${resetLink}`,
     html: `<p>To reset your password, please click the following link: <a href="${resetLink}">Reset Password</a></p>`,
   };
