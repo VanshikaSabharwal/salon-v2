@@ -1,19 +1,20 @@
 "use client"
 
 import type React from "react"
-import { useState} from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
-
-
+import { EyeIcon, EyeOffIcon } from "lucide-react" // Importing icons
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
-  const [email,setEmail] = useState("")
+  const [email, setEmail] = useState("")
   const [error, setError] = useState("")
   const [message, setMessage] = useState("")
-  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
+  const router = useRouter()
 
   const handleResetPassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -35,7 +36,7 @@ export default function ResetPasswordPage() {
       const res = await fetch("/api/login", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({email, password }),
+        body: JSON.stringify({ email, password }),
       })
 
       const data = await res.json()
@@ -73,28 +74,42 @@ export default function ResetPasswordPage() {
           />
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 relative">
           <label className="block text-sm text-white font-medium">New Password</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border text-black rounded"
+            className="w-full px-3 py-2 border text-black rounded pr-10"
             placeholder="New Password"
             required
           />
+          <button
+            type="button"
+            className="absolute right-3 top-9 text-gray-400"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
+          </button>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-4 relative">
           <label className="block text-sm text-white font-medium">Confirm Password</label>
           <input
-            type="password"
+            type={showConfirmPassword ? "text" : "password"}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="w-full px-3 py-2 border text-black rounded"
+            className="w-full px-3 py-2 border text-black rounded pr-10"
             placeholder="Confirm Password"
             required
           />
+          <button
+            type="button"
+            className="absolute right-3 top-9 text-gray-400"
+            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+          >
+            {showConfirmPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
+          </button>
         </div>
 
         <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
@@ -104,4 +119,3 @@ export default function ResetPasswordPage() {
     </div>
   )
 }
-
