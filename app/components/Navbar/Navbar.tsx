@@ -10,42 +10,57 @@ import {
   FaFacebook,
   FaBars,
   FaTimes,
+  FaYoutube,
 } from "react-icons/fa";
 import socialsData from "../../../data/socials.json";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
   const socials = socialsData;
 
   // Map social names to corresponding React Icons
   const icons: Record<string, React.ReactNode> = {
-    WhatsApp: <FaWhatsapp />,
-    Phone: <FaPhone />,
-    Instagram: <FaInstagram />,
-    LinkedIn: <FaLinkedinIn />,
-    Facebook: <FaFacebook />,
-    Twitter: <FaTwitter />,
+    WhatsApp: <FaWhatsapp aria-hidden="true" />,
+    Phone: <FaPhone aria-hidden="true" />,
+    Instagram: <FaInstagram aria-hidden="true" />,
+    LinkedIn: <FaLinkedinIn aria-hidden="true" />,
+    Facebook: <FaFacebook aria-hidden="true" />,
+    Twitter: <FaTwitter aria-hidden="true" />,
+    YouTube: <FaYoutube aria-hidden="true" />,
   };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  // Prevent scrolling when menu is open
+  // Close menu when clicking outside
   useEffect(() => {
+    const closeMenuOnOutsideClick = (event: MouseEvent) => {
+      if (
+        isMenuOpen &&
+        event.target instanceof HTMLElement &&
+        !event.target.closest(".navbar-container")
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
     if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
+      document.addEventListener("click", closeMenuOnOutsideClick);
     } else {
-      document.body.style.overflow = "unset";
+      document.removeEventListener("click", closeMenuOnOutsideClick);
     }
+
     return () => {
-      document.body.style.overflow = "unset";
+      document.removeEventListener("click", closeMenuOnOutsideClick);
     };
   }, [isMenuOpen]);
 
   return (
-    <div className="bg-black text-white p-5 shadow-md">
+    <div className="bg-black text-white p-5 shadow-md navbar-container">
       {/* Navbar Section */}
       <div className="flex justify-between items-center max-w-screen-xl mx-auto">
         <div className="logo">
@@ -60,7 +75,7 @@ const Navbar = () => {
             onClick={toggleMenu}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
-            {isMenuOpen ? <FaTimes /> : <FaBars />}
+            {isMenuOpen ? <FaTimes aria-hidden="true" /> : <FaBars aria-hidden="true" />}
           </button>
 
           {/* Dropdown Menu */}
@@ -72,42 +87,19 @@ const Navbar = () => {
             <div className="flex flex-col h-full justify-center items-center lg:flex-row lg:justify-end lg:h-auto lg:space-x-8">
               {/* Navigation Links */}
               <ul className="flex flex-col items-center space-y-6 mb-8 lg:flex-row lg:space-x-8 lg:space-y-0 lg:mb-0">
-                <li>
-                  <Link
-                    href="/"
-                    className="text-2xl lg:text-xl hover:text-gray-400 transition duration-300"
-                    onClick={toggleMenu}
-                  >
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/services"
-                    className="text-2xl lg:text-xl hover:text-gray-400 transition duration-300"
-                    onClick={toggleMenu}
-                  >
-                    Services
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/gallery"
-                    className="text-2xl lg:text-xl hover:text-gray-400 transition duration-300"
-                    onClick={toggleMenu}
-                  >
-                    Gallery
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/"
-                    className="text-2xl lg:text-xl hover:text-gray-400 transition duration-300"
-                    onClick={toggleMenu}
-                  >
-                    Contact
-                  </Link>
-                </li>
+                {["/", "/services", "/gallery", "/contact"].map((route, index) => (
+                  <li key={index}>
+                    <Link
+                      href={route}
+                      className={`text-2xl lg:text-xl transition duration-300 ${
+                        pathname === route ? "text-[#e0b0ff] font-bold" : "hover:text-gray-400"
+                      }`}
+                      onClick={toggleMenu}
+                    >
+                      {route === "/" ? "Home" : route.substring(1).charAt(0).toUpperCase() + route.substring(2)}
+                    </Link>
+                  </li>
+                ))}
               </ul>
 
               {/* Social Icons */}
@@ -124,6 +116,7 @@ const Navbar = () => {
                     {icons[social.name]}
                   </Link>
                 ))}
+               
               </div>
             </div>
           </div>

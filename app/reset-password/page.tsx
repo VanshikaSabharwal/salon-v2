@@ -86,8 +86,8 @@ export default function ResetPasswordPage() {
           />
           <button
             type="button"
-            className="absolute right-3 top-9 text-gray-400"
-            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-9 text-black"
+            onClick={() => setShowPassword((prev) => (!prev))}
           >
             {showPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
           </button>
@@ -105,8 +105,8 @@ export default function ResetPasswordPage() {
           />
           <button
             type="button"
-            className="absolute right-3 top-9 text-gray-400"
-            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            className="absolute right-3 top-9 text-black"
+            onClick={() => setShowConfirmPassword((prev) => (!prev))}
           >
             {showConfirmPassword ? <EyeOffIcon size={20} /> : <EyeIcon size={20} />}
           </button>
