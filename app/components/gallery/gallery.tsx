@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect, useCallback } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+// import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import galleryData from "../../../data/gallery.json";
 
 interface GalleryItem {
