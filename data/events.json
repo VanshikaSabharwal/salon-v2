@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "Bridal Makeup Workshop",
+    "description": "Learn professional bridal makeup techniques from our experts.",
+    "date": "15 March 2026",
+    "image": "/images/m1.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Hair Styling Masterclass",
+    "description": "Discover trending hairstyles and styling tips.",
+    "date": "22 March 2026",
+    "image": "/images/m3.jpg"
+  },
+  {
+    "id": 3,
+    "title": "Skin Care Awareness Camp",
+    "description": "Free consultation and skincare routine guidance.",
+    "date": "05 April 2026",
+    "image": "/images/m2.jpg"
+  },
+  {
+    "id": 4,
+    "title": "Festive Beauty Offer",
+    "description": "Exclusive festive packages and discounts.",
+    "date": "14 April 2026",
+    "image": "/images/m4.jpg"
+  }
+]

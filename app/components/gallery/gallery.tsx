@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import galleryData from "../../../data/gallery.json";
 
 interface GalleryItem {
   id: number;
@@ -24,7 +25,7 @@ const GalleryComponent = () => {
   const [loading, setLoading] = useState(false);
   // const [loadingPercentage, setLoadingPercentage] = useState(0);
 
-  const supabase = createClientComponentClient();
+  // const supabase = createClientComponentClient();
 
   // const simulateLoading = async () => {
   //   return new Promise((resolve) => {
@@ -38,17 +39,28 @@ const GalleryComponent = () => {
   //   });
   // };
 
+  // uncomment when using database 
+  // const fetchGallery = useCallback(async () => {
+  //   try {
+  //     const { data, error } = await supabase.from("gallery").select("*");
+  //     if (error) throw error;
+  //     setGallery(data || []);
+  //   } catch (error) {
+  //     console.error("Error fetching gallery:", error);
+  //     toast.error("Failed to load gallery");
+  //     setGallery([]);
+  //   }
+  // }, [supabase]);
+
+  // when using local .json 
   const fetchGallery = useCallback(async () => {
-    try {
-      const { data, error } = await supabase.from("gallery").select("*");
-      if (error) throw error;
-      setGallery(data || []);
-    } catch (error) {
-      console.error("Error fetching gallery:", error);
-      toast.error("Failed to load gallery");
-      setGallery([]);
-    }
-  }, [supabase]);
+  try {
+    setGallery(galleryData);
+  } catch (error) {
+    console.error(error);
+    toast.error("Failed to load gallery");
+  }
+}, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -130,52 +142,52 @@ const GalleryComponent = () => {
     }
   };
 
-  const handleAddMedia = async () => {
-    if (gallery.length >= 10) {
-      toast.error("You can only add 10 images to the gallery");
-      return;
-    }
+  // const handleAddMedia = async () => {
+  //   if (gallery.length >= 10) {
+  //     toast.error("You can only add 10 images to the gallery");
+  //     return;
+  //   }
 
-    const newGallery = {
-      src: newMediaPreview,
-      alt: newAlt,
-      type: newMedia?.type?.startsWith("image/") ? "image" : "video",
-    };
+  //   const newGallery = {
+  //     src: newMediaPreview,
+  //     alt: newAlt,
+  //     type: newMedia?.type?.startsWith("image/") ? "image" : "video",
+  //   };
 
-    try {
-      const { data, error } = await supabase
-        .from("gallery")
-        .insert([newGallery])
-        .select();
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from("gallery")
+  //       .insert([newGallery])
+  //       .select();
 
-      if (error) throw error;
+  //     if (error) throw error;
 
-      if (data && data.length > 0) {
-        setGallery([...gallery, data[0]]);
-        toast.success("Media added successfully!");
-      } else {
-        toast.error("Failed to add media");
-      }
-    } catch (error) {
-      console.error("Error adding media:", error);
-      toast.error("Failed to add media");
-    }
-  };
+  //     if (data && data.length > 0) {
+  //       setGallery([...gallery, data[0]]);
+  //       toast.success("Media added successfully!");
+  //     } else {
+  //       toast.error("Failed to add media");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error adding media:", error);
+  //     toast.error("Failed to add media");
+  //   }
+  // };
 
-  const handleDeleteMedia = async (id: number) => {
-    try {
-      const { error } = await supabase.from("gallery").delete().eq("id", id);
+  // const handleDeleteMedia = async (id: number) => {
+  //   try {
+  //     const { error } = await supabase.from("gallery").delete().eq("id", id);
 
-      if (error) throw error;
+  //     if (error) throw error;
 
-      setGallery((prev) => prev.filter((media) => media.id !== id));
-      toast.success("Media deleted successfully!");
-    } catch (error) {
-      console.error("Failed to delete media:", error);
+  //     setGallery((prev) => prev.filter((media) => media.id !== id));
+  //     toast.success("Media deleted successfully!");
+  //   } catch (error) {
+  //     console.error("Failed to delete media:", error);
 
-      toast.error(`Error adding service: ${JSON.stringify(error)}`);
-    }
-  };
+  //     toast.error(`Error adding service: ${JSON.stringify(error)}`);
+  //   }
+  // };
 
   return (
     <div className="bg-[#f8f1e7] p-6">
@@ -221,7 +233,7 @@ const GalleryComponent = () => {
 
                   {isEditing && isAdmin && (
                     <button
-                      onClick={() => handleDeleteMedia(media.id)}
+                      // onClick={() => handleDeleteMedia(media.id)}
                       className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
                     >
                       Delete
@@ -266,7 +278,7 @@ const GalleryComponent = () => {
                   className="w-full px-3 py-2 text-black border rounded mt-2"
                 />
                 <button
-                  onClick={handleAddMedia}
+                  // onClick={handleAddMedia}
                   disabled={loading}
                   className="bg-green-500 text-white px-4 py-2 rounded mt-2"
                 >
