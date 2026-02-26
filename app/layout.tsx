@@ -19,7 +19,7 @@ const merienda = Merienda({
 });
 
 export const metadata: Metadata = {
-  title: "K Style Professional",
+  title: "Salon Website",
   description: "",
 };
 
